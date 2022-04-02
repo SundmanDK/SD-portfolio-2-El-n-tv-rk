@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class AdjacencyGraph {
     ArrayList<Vertex> vertices;
@@ -35,39 +34,41 @@ public class AdjacencyGraph {
     }
 
     public void PrimsMST(){
-        MinHeap<Vertex> Q = new MinHeap<Vertex>();
-        ArrayList<Vertex> visited = new ArrayList<Vertex>();
-        for (Vertex v : vertices){
+        MinHeap<Vertex> Q = new MinHeap<Vertex>();              //Graph heap
+        ArrayList<Vertex> visited = new ArrayList<Vertex>();    //List of nodes visited
+        for (Vertex v : vertices){                              //Heapify graph
             Q.insert(v);
         }
-        if (vertices.size() > 0){
+        if (vertices.size() > 0){                               //Assign start node
             Q.viewMin().dist = 0;
         }
+        int MST = 0;                                            //Collective distance
 
-        int MST = 0;
-        while (!Q.isEmpty()){
-            Vertex u = Q.extractMin();
-            for (Edge v : u.outEdge){
-                if (v.weight < v.to.dist && !visited.contains(v.to)){
-                    v.to.dist = v.weight;
-                    v.to.prev = v.from;
+        while (!Q.isEmpty()){                                   //Go through the full heap
+            Vertex u = Q.extractMin();                          //Pick the shortest path to a node
+            for (Edge v : u.outEdge){                           //For each path from that node
+                if (v.weight < v.to.dist && !visited.contains(v.to)){   //If a new path is shorter than the previously written path and the destination has not been visited yet
+                    v.to.dist = v.weight;                       //Write new path
+                    v.to.prev = v.from;                         //Write where that path originates from.
 
-                    int pos = Q.getPosition(v.to);
-                    Q.decreasekey(pos);
+                    Q.decreasekey(Q.getPosition(v.to));         //Update the position of the destination in the heap
                 }
             }
-            visited.add(u);
-            MST += u.dist;
+            visited.add(u);                                     //Mark the node as visited
+            MST += u.dist;                                      //Add the path length to the node to the collective distance
         }
+        printMST(visited, MST);                                 //Show minimum spanning tree
+    }
 
-        for (Vertex v : visited){
+    public void printMST(ArrayList<Vertex> vertices, int length){
+        for (Vertex v : vertices){
             if (v.prev != null) {
                 System.out.println("Going from: " + v.prev.name + ", to: " + v.name + ", distance: " + v.dist +" km.");
             } else {
                 System.out.println("Origin name: "+ v.name);
             }
         }
-        System.out.println("Collective distance: "+ MST  +" km.");
+        System.out.println("Collective distance: "+ length  +" km.");
     }
 
     public void printGraph(){
