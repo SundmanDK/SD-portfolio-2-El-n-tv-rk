@@ -1,7 +1,6 @@
 package com.company;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class AdjacencyGraph {
     ArrayList<Vertex> vertices;
