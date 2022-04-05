@@ -4,7 +4,7 @@ public class Main {
 
     public static void main(String[] args) {
 	    AdjacencyGraph cities = createGraph();
-        cities.printGraph();
+        //cities.printGraph();
         cities.PrimsMST();
     }
 
@@ -26,7 +26,7 @@ public class Main {
         Vertex Ros = new Vertex("Roskilde");
         Vertex Sla = new Vertex("Slagelse");
         Vertex Sor = new Vertex("Sorø");
-        Vertex Vor = new Vertex("VordingBorg");
+        Vertex Vor = new Vertex("Vordingborg");
 
         newG.addVertex(Esk);
         newG.addVertex(Has);

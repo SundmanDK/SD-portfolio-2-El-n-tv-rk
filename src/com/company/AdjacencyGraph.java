@@ -1,6 +1,7 @@
 package com.company;
 
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class AdjacencyGraph {
     ArrayList<Vertex> vertices;
@@ -34,30 +35,31 @@ public class AdjacencyGraph {
     }
 
     public void PrimsMST(){
-        MinHeap<Vertex> Q = new MinHeap<Vertex>();              //Graph heap
-        ArrayList<Vertex> visited = new ArrayList<Vertex>();    //List of nodes visited
+        MinHeap<Vertex> Q = new MinHeap<>();                    //Graph heap
+        ArrayList<Vertex> visitedVertices = new ArrayList<>();  //List of visited vertices used for printing
+        int MST = 0;                                            //Collective distance
         for (Vertex v : vertices){                              //Heapify graph
             Q.insert(v);
         }
         if (vertices.size() > 0){                               //Assign start node
             Q.viewMin().dist = 0;
         }
-        int MST = 0;                                            //Collective distance
 
         while (!Q.isEmpty()){                                   //Go through the full heap
             Vertex u = Q.extractMin();                          //Pick the shortest path to a node
             for (Edge v : u.outEdge){                           //For each path from that node
-                if (v.weight < v.to.dist && !visited.contains(v.to)){   //If a new path is shorter than the previously written path and the destination has not been visited yet
+                if (v.weight < v.to.dist && !v.to.visited){     //If a new path is shorter than the previously written path and the destination has not been visited yet
                     v.to.dist = v.weight;                       //Write new path
                     v.to.prev = v.from;                         //Write where that path originates from.
 
                     Q.decreasekey(Q.getPosition(v.to));         //Update the position of the destination in the heap
                 }
             }
-            visited.add(u);                                     //Mark the node as visited
+            u.visited = true;                                   //Mark the node as visited
+            visitedVertices.add(u);                             //Save order of visited vertices
             MST += u.dist;                                      //Add the path length to the node to the collective distance
         }
-        printMST(visited, MST);                                 //Show minimum spanning tree
+        printMST(visitedVertices, MST);                         //Show minimum spanning tree
     }
 
     public void printMST(ArrayList<Vertex> vertices, int length){
@@ -69,6 +71,7 @@ public class AdjacencyGraph {
             }
         }
         System.out.println("Collective distance: "+ length  +" km.");
+        System.out.println("Cost of new electricity new: "+ length +".000.000 kr.");
     }
 
     public void printGraph(){
@@ -87,6 +90,7 @@ class Vertex implements Comparable<Vertex> {
     ArrayList<Edge> outEdge;
     Integer dist = Integer.MAX_VALUE;
     Vertex prev = null;
+    boolean visited = false;
 
     public Vertex(String name){
         this.name = name;
